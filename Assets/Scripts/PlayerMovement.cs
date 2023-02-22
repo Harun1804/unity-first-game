@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveState = 5f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private LayerMask jumpableGround;
+    [SerializeField] private AudioSource jumpAudio;
 
     private enum MovementState {idling, running, jumping, falling}
     // Start is called before the first frame update
@@ -27,21 +28,20 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dirX = movementState();
-        animationState();
-    }
-    private float movementState() 
-    {
         dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * moveState, rb.velocity.y);
+        if (rb.bodyType != RigidbodyType2D.Static)
+        {
+            rb.velocity = new Vector2(dirX * moveState, rb.velocity.y);
+        }
 
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
+            jumpAudio.Play();
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
-
-        return dirX;
+        animationState();
     }
+
     private void animationState()
     {
         MovementState state;
