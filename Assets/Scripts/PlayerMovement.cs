@@ -32,14 +32,13 @@ public class PlayerMovement : MonoBehaviour
         if (rb.bodyType != RigidbodyType2D.Static)
         {
             rb.velocity = new Vector2(dirX * moveState, rb.velocity.y);
+            if (Input.GetButtonDown("Jump") && IsGrounded())
+            {
+                jumpAudio.Play();
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            }
+            animationState();
         }
-
-        if (Input.GetButtonDown("Jump") && IsGrounded())
-        {
-            jumpAudio.Play();
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-        animationState();
     }
 
     private void animationState()
